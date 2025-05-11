@@ -25,13 +25,13 @@ class NewsClassifier:
 class WorldSentimentAnalyzer:
     def __init__(self):
         self.device = 0 if torch.cuda.is_available() else -1
-        self.tokenizer = AutoTokenizer.from_pretrained('cardiffnlp/twitter-roberta-base-sentiment-latest')
-        self.model = AutoModelForSequenceClassification.from_pretrained('cardiffnlp/twitter-roberta-base-sentiment-latest')
+        self.tokenizer = AutoTokenizer.from_pretrained('logicalqubit/deberta-v3-large-world-news-sentiment-classifier')
+        self.model = AutoModelForSequenceClassification.from_pretrained('logicalqubit/deberta-v3-large-world-news-sentiment-classifier')
         if self.device == 0:
             self.model = self.model.to('cuda')
 
     def world_analyze_sentiment(self, text: str) -> str:
-        inputs = self.tokenizer(text, return_tensors='pt', truncation=True, max_length=512)
+        inputs = self.tokenizer(text, return_tensors='pt', truncation=True, max_length=256)
         if self.device == 0:
             inputs = {k: v.to(self.model.device) for k, v in inputs.items()}
         
@@ -39,19 +39,19 @@ class WorldSentimentAnalyzer:
         predictions = torch.nn.functional.softmax(outputs.logits, dim=-1)
         sentiment_idx = predictions.argmax().item()
         
-        sentiments = ['positive', 'negative', 'neutral']
+        sentiments = ['positive', 'neutral', 'negative']
         return sentiments[sentiment_idx]
 
 class BusinessSentimentAnalyzer:
     def __init__(self):
         self.device = 0 if torch.cuda.is_available() else -1
-        self.tokenizer = AutoTokenizer.from_pretrained('ProsusAI/finbert')
-        self.model = AutoModelForSequenceClassification.from_pretrained('ProsusAI/finbert')
+        self.tokenizer = AutoTokenizer.from_pretrained('logicalqubit/deberta-v3-large-business-news-sentiment-classifier')
+        self.model = AutoModelForSequenceClassification.from_pretrained('logicalqubit/deberta-v3-large-business-news-sentiment-classifier')
         if self.device == 0:
             self.model = self.model.to('cuda')
 
     def business_analyze_sentiment(self, text: str) -> str:
-        inputs = self.tokenizer(text, return_tensors='pt', truncation=True, max_length=512)
+        inputs = self.tokenizer(text, return_tensors='pt', truncation=True, max_length=256)
         if self.device == 0:
             inputs = {k: v.to(self.model.device) for k, v in inputs.items()}
         
@@ -59,7 +59,7 @@ class BusinessSentimentAnalyzer:
         predictions = torch.nn.functional.softmax(outputs.logits, dim=-1)
         sentiment_idx = predictions.argmax().item()
         
-        sentiments = ['positive', 'negative', 'neutral']
+        sentiments = ['positive', 'neutral', 'negative']
         return sentiments[sentiment_idx]
 
 class CSVtoSQL:
