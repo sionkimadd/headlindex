@@ -111,7 +111,7 @@ class CSVtoSQL:
             try:
                 existing_data = pd.read_sql(f'SELECT * FROM {SQL_TABLE_NAME}', self.__engine)
                 combined_data = pd.concat([existing_data, self.__news_data])
-                combined_data = combined_data.drop_duplicates(subset=['title'], keep='last')
+                combined_data = combined_data.drop_duplicates(subset=['title', 'datetime'], keep='last')
             except:
                 combined_data = self.__news_data
 

@@ -46,9 +46,10 @@ def download_csv(search_word):
             
         if not os.path.exists(csv_path):
             return jsonify({'error': 'Error: File not found.'}), 404
+
         return send_file(csv_path, as_attachment=True, download_name=os.path.basename(csv_path))
-    except Exception:
-        return jsonify({'error': 'Error: Failed to download file.'}), 500
+    except Exception as e:
+        return jsonify({'error': f'Error: Failed to download file. {str(e)}'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
