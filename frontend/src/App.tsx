@@ -4,6 +4,7 @@ import { SearchForm } from './components/SearchForm';
 import { AlertMessage } from './components/AlertMessage';
 import { DownloadLink } from './components/DownloadLink';
 import { LoadingSpinner } from './components/LoadingSpinner';
+import { SentimentChart } from './components/SentimentChart';
 
 function App() {
   const [message, setMessage] = useState('');
@@ -53,6 +54,9 @@ function App() {
       <SearchForm onSubmit={handleSubmit} />
       {message && <AlertMessage message={message} isError={isError} />}
       {!isError && searchWord && <DownloadLink searchWord={searchWord} />}
+      {message === 'Success: Process completed successfully.' && !isError && searchWord && (
+        <SentimentChart searchWord={searchWord} />
+      )}
       {isLoading && <LoadingSpinner />}
     </div>
   );
